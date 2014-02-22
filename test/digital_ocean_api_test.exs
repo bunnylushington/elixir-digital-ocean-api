@@ -26,7 +26,8 @@ defmodule DigitalOceanApiTest do
 
 
   test "/droplets" do
-    assert DigOc.droplets == "123"
+    res = DigOc.droplets
+    assert res["status"] == "OK"
   end
 
 end

@@ -3,4 +3,9 @@ defmodule DigOc.Client do
   use HTTPotion.Base
   
   def process_url(path), do: url <> path <> auth
+
+  def process_response_body(body) do
+    JSON.decode to_string(body)
+  end
+  
 end
