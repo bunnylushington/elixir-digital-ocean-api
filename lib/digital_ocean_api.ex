@@ -1,2 +1,0 @@
-defmodule DigitalOceanApi do
-end
