@@ -14,6 +14,7 @@ defmodule DigitalOceanApi.Mixfile do
 
   defp deps do
     [
+     { :httpotion, github: "myfreeweb/httpotion"},
      { :json, github: "cblage/elixir-json"},
     ]
   end

@@ -1,6 +1,8 @@
 defmodule DigitalOceanApiTest do
   use ExUnit.Case
 
+  HTTPotion.start
+
   test "client id retrieved" do
     assert DigOc.Utility.client_id
   end
@@ -10,7 +12,7 @@ defmodule DigitalOceanApiTest do
   end
 
   test "url correct" do
-    assert DigOc.Utility.url == "https://digitalocean.com/"
+    assert DigOc.Utility.url == "https://api.digitalocean.com/"
   end
 
   test "path fabricated correctly" do
@@ -22,13 +24,9 @@ defmodule DigitalOceanApiTest do
     assert DigOc.Utility.path([]) == ""
   end
 
-  test "url fabricated correctly" do
-    url_prefix = DigOc.Utility.url <> "a/b/c?client_id"
-    parts = [:a, :b, :c]
-    url = DigOc.Utility.make_url(parts)
-    {pos, _} = :binary.match(url, url_prefix)
-    assert pos == 0
-    assert :binary.match(url, "api_key") != :nomatch
+
+  test "/droplets" do
+    assert DigOc.droplets == "123"
   end
 
 end
