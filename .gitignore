@@ -1,0 +1,11 @@
+/_build
+/deps
+erl_crash.dump
+*.ez
+*.beam
+
+.fuse*
+.nfs*
+.\#*
+\#*
+*~
