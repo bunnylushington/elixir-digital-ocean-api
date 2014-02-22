@@ -7,6 +7,11 @@ defmodule DigOc do
     res
   end
 
+  # -- /regions
+  def regions do
+    {:ok, res} = DigOc.Client.get("/regions").body
+    res
+  end
 
 
 end

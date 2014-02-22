@@ -29,5 +29,10 @@ defmodule DigitalOceanApiTest do
     res = DigOc.droplets
     assert res["status"] == "OK"
   end
+  
+  test "/regions" do
+    res = DigOc.regions
+    assert res["status"] == "OK"
+  end
 
 end
