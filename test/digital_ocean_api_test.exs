@@ -36,8 +36,12 @@ defmodule DigitalOceanApiTest do
   end
   
   test "/regions" do
-    res = DigOc.regions
+    res = DigOc.Raw.regions
     assert res["status"] == "OK"
+    
+    regions = DigOc.regions
+    assert is_list(regions)
+    assert is_record(hd(regions), DigOc.Region)
   end
 
   test "/images" do

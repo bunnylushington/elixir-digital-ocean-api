@@ -8,9 +8,14 @@ defmodule DigOc do
   end
 
   # -------------------------------------------------- /regions
+  defrecord Region,
+    name: nil,
+    id: nil,
+    slug: nil
+
   def regions do
-    {:ok, res} = DigOc.Client.get("/regions").body
-    res
+    res = DigOc.Raw.regions
+    Enum.map res["regions"], fn(d) -> DigOc.Convert.to_region_record(d) end
   end
 
   # -------------------------------------------------- /images

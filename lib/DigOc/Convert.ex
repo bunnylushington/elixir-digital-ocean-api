@@ -1,5 +1,11 @@
 defmodule DigOc.Convert do
 
+  def to_region_record(d) do
+    DigOc.Region.new(name: d["name"],
+                     id:   d["id"],
+                     slug: d["slug"])
+  end
+
   def to_image_record(d) do
     DigOc.Image.new(name:         d["name"],
                     distribution: d["distribution"],
