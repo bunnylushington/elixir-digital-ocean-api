@@ -66,5 +66,14 @@ defmodule DigitalOceanApiTest do
     assert res["status"] == "OK"
   end
 
+  test "destroy ssh key" do
+    id = DigOc.Utility.ssh_key_id("testkey")
+    res = DigOc.ssh_keys :delete, id
+    assert res["status"] == "OK"
+    res = DigOc.ssh_keys :delete, id
+    assert res["status"] == "ERROR"
+  end
+    
+
 
 end

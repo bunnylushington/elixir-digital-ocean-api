@@ -35,7 +35,10 @@ defmodule DigOc do
     res
   end
 
-               
+  def ssh_keys(:delete, id) do
+    {:ok, res} = DigOc.Client.get("/ssh_keys/#{ ssh_key_id id}/destroy").body
+    res
+  end
   
 
 end
