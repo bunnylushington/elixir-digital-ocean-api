@@ -25,20 +25,28 @@ defmodule DigOc do
     res
   end
 
+  def ssh_keys(id) do
+    {:ok, res} = DigOc.Client.get("/ssh_keys/#{ ssh_key_id id }").body
+    res
+  end
+
   def ssh_keys(:add, params) do
     {:ok, res} = DigOc.Client.get("/ssh_keys/new/" <> qs(params)).body
     res
   end
 
-  def ssh_keys(:get, id) do
-    {:ok, res} = DigOc.Client.get("/ssh_keys/#{ ssh_key_id id }").body
-    res
-  end
-
-  def ssh_keys(:delete, id) do
+  def ssh_keys(id, :destroy) do
     {:ok, res} = DigOc.Client.get("/ssh_keys/#{ ssh_key_id id}/destroy").body
     res
   end
+
+  def ssh_keys(id, :edit, params) do
+    url = "/ssh_keys/#{ ssh_key_id id }/edit/" <> qs(params)
+    {:ok, res} = DigOc.Client.get(url).body
+    res
+  end
+
+
   
 
 end
