@@ -5,6 +5,7 @@ defmodule DigitalOceanApi.Mixfile do
     [ app: :digital_ocean_api,
       version: "0.0.1",
       elixir: "~> 0.12.4",
+      compile_path: "ebin",
       deps: deps ]
   end
 

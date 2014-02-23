@@ -9,6 +9,9 @@ defmodule DigOc.Utility do
   def path([]), do: ""
   def path(parts), do: Enum.join(parts, "/")
   
-  def auth, do: "?client_id=#{ client_id }&api_key=#{ api_key }"
+  def auth, do: "client_id=#{ client_id }&api_key=#{ api_key }"
+
+  def qs(params), do: "?" <> URI.encode_query params
+    
 
 end

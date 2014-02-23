@@ -23,7 +23,12 @@ defmodule DigitalOceanApiTest do
     assert DigOc.Utility.path("") == ""
     assert DigOc.Utility.path([]) == ""
   end
-
+  
+  test "query string creation" do
+    params = [foo: "bar", baz: "quux"]
+    qs = "?foo=bar&baz=quux"
+    assert DigOc.Utility.qs(params) == qs
+ end
 
   test "/droplets" do
     res = DigOc.droplets
@@ -37,6 +42,17 @@ defmodule DigitalOceanApiTest do
 
   test "/images" do
     res = DigOc.images
+    assert res["status"] == "OK"
+  end
+
+  test "/ssh_keys" do
+    res = DigOc.ssh_keys
+    assert res["status"] == "OK"
+  end
+
+  test "add ssh key" do
+    key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDSAFOCkXC61jeb/L8FeDn8nfb5bre5ph3a1vvHWvs7amQw7JIgy3rP6uqPZabJCNWxGdORGP5lNNwdQ1s7hdteQvoUlPTg1WXFr7ZJ9pUNuAB0nyasY+7tEzJWJvXAUx7eZOhxI7qfgH0E9AAkMpqZ6o9uQfu2Ov8uAj2tXQNtXbkn0N4jOXqJvIXY9MJu7/FTH6TReeQyJoUfUAhlDWXmtE+T7YySyVDzOprM41tXGY5KUYgPQUAWXNVzAkMdlLf6dU9HIRvzEgYMkL+ka0W25gEaQlgas8gahkDuKVaT/5WkOcEaf3HnM+NMNPwXw626IB/w/Y9BCTHczDspoKbB montuori@joe-cool.local"
+    res = DigOc.ssh_keys :add, [name: "testkey", ssh_pub_key: key]
     assert res["status"] == "OK"
   end
 
