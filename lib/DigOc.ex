@@ -60,20 +60,7 @@ defmodule DigOc do
   
   def sizes do
     res = DigOc.Raw.sizes
-    Enum.map res["sizes"], fn(d) -> size_dict_to_record(d) end
+    Enum.map res["sizes"], fn(d) -> DigOc.Convert.to_size_record(d) end
   end
-
-  def size_dict_to_record(d) do
-    Size.new(cost_per_hour:  d["cost_per_hour"],
-             cost_per_month: d["cost_per_month"],
-             name:           d["name"],
-             id:             d["id"],
-             memory:         d["memory"],
-             slug:           d["slug"],
-             cpu:            d["cpu"],
-             disk:           d["disk"])
-  end
-             
-
     
 end

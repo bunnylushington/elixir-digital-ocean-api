@@ -82,6 +82,10 @@ defmodule DigitalOceanApiTest do
   test "get sizes" do
     res = DigOc.Raw.sizes
     assert res["status"] == "OK"
+
+    sizes = DigOc.sizes
+    assert is_list(sizes)
+    assert is_record(hd(sizes), DigOc.Size)
   end
   
 
