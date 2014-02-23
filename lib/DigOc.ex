@@ -14,10 +14,15 @@ defmodule DigOc do
   end
 
   # -------------------------------------------------- /images
-  def images do
-    {:ok, res} = DigOc.Client.get("/images").body
-    res
-  end
+  defrecord Image, 
+    name: nil,
+    distribution: nil,
+    id: nil,
+    region_slugs: [],
+    slug: nil,
+    public: nil,
+    regions: nil
+    
 
   # -------------------------------------------------- /ssh_keys
   def ssh_keys do

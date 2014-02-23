@@ -5,5 +5,9 @@ defmodule DigOc.Raw do
     res
   end
 
+  def images do
+    {:ok, res} = DigOc.Client.get("/images").body
+    res
+  end
 
 end
