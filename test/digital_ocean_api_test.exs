@@ -30,6 +30,18 @@ defmodule DigitalOceanApiTest do
     assert DigOc.Utility.qs(params) == qs
  end
 
+
+  test "cache record conversion" do
+    defrecord A, id: nil, name: nil
+    recs = [A.new(id: 1, name: "foo"),
+            A.new(id: 2, name: "bar"),
+            A.new(id: 3, name: "baz")]
+    hash = DigOc.Convert.to_cache_record(recs)
+    assert hash[1].name == "foo"
+    assert hash[2].name == "bar"
+    assert hash[3].name == "baz"
+  end
+
   test "/droplets" do
     res = DigOc.Raw.droplets
     assert res["status"] == "OK"

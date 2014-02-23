@@ -41,4 +41,7 @@ defmodule DigOc.Convert do
                    disk:           d["disk"])
   end
 
+
+  def to_cache_record(l), do: HashDict.new(Enum.map l, fn(r) -> {r.id, r} end)
+
 end
