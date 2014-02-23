@@ -35,4 +35,9 @@ defmodule DigitalOceanApiTest do
     assert res["status"] == "OK"
   end
 
+  test "/images" do
+    res = DigOc.images
+    assert res["status"] == "OK"
+  end
+
 end

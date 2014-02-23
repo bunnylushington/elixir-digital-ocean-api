@@ -13,5 +13,11 @@ defmodule DigOc do
     res
   end
 
+  # -- /images
+  def images do
+    {:ok, res} = DigOc.Client.get("/images").body
+    res
+  end
+
 
 end
