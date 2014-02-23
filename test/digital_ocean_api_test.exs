@@ -56,4 +56,15 @@ defmodule DigitalOceanApiTest do
     assert res["status"] == "OK"
   end
 
+  test "get ssh key id for label" do
+    assert is_integer(DigOc.Utility.ssh_key_id("testkey"))
+    assert DigOc.Utility.ssh_key_id(1234) == 1234
+  end
+
+  test "get ssh key" do
+    res = DigOc.ssh_keys :get, "testkey"
+    assert res["status"] == "OK"
+  end
+
+
 end

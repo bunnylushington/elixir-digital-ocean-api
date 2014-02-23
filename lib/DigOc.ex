@@ -1,5 +1,5 @@
 defmodule DigOc do
-  import DigOc.Utility, only: [qs: 1]
+  import DigOc.Utility, only: [qs: 1, ssh_key_id: 1]
 
   # -- /droplets
   def droplets do
@@ -30,5 +30,12 @@ defmodule DigOc do
     res
   end
 
+  def ssh_keys(:get, id) do
+    {:ok, res} = DigOc.Client.get("/ssh_keys/#{ ssh_key_id id }").body
+    res
+  end
+
+               
+  
 
 end
