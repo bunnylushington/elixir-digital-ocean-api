@@ -1,5 +1,19 @@
 defmodule DigOc.Convert do
 
+  def to_droplet_record(d) do
+    DigOc.Droplet.new(backups_active:     d["backups_active"],
+                      status:             d["status"],
+                      private_ip_address: d["private_ip_address"],
+                      name:               d["name"],
+                      created_at:         d["created_at"],
+                      image_id:           d["image_id"],
+                      locked:             d["locked"],
+                      id:                 d["id"],
+                      size_id:            d["size_id"],
+                      region_id:          d["region_id"],
+                      ip_address:         d["ip_address"])
+  end
+
   def to_region_record(d) do
     DigOc.Region.new(name: d["name"],
                      id:   d["id"],

@@ -31,8 +31,12 @@ defmodule DigitalOceanApiTest do
  end
 
   test "/droplets" do
-    res = DigOc.droplets
+    res = DigOc.Raw.droplets
     assert res["status"] == "OK"
+    
+    droplets = DigOc.droplets
+    assert is_list(droplets)
+    assert is_record(hd(droplets), DigOc.Droplet)
   end
   
   test "/regions" do

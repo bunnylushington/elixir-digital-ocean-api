@@ -1,5 +1,10 @@
 defmodule DigOc.Raw do
 
+  def droplets do
+    {:ok, res} = DigOc.Client.get("/droplets").body
+    res
+  end
+
   def regions do
     {:ok, res} = DigOc.Client.get("/regions").body
     res

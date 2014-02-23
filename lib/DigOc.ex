@@ -2,10 +2,25 @@ defmodule DigOc do
   import DigOc.Utility, only: [qs: 1, ssh_key_id: 1]
 
   # -------------------------------------------------- /droplets
+  defrecord Droplet,
+    backups_active: nil,
+    status: nil,
+    private_ip_address: nil,
+    name: nil,
+    created_at: nil,
+    image_id: nil,
+    locked: nil,
+    id: nil,
+    size_id: nil,
+    region_id: nil,
+    ip_address: nil
+
   def droplets do
-    {:ok, res} = DigOc.Client.get("/droplets").body
-    res
+    res = DigOc.Raw.droplets
+    Enum.map res["droplets"], fn(d) -> DigOc.Convert.to_droplet_record(d) end
   end
+    
+  
 
   # -------------------------------------------------- /regions
   defrecord Region,
