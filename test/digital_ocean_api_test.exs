@@ -53,7 +53,7 @@ defmodule DigitalOceanApiTest do
   test "create, lookup, destroy ssh key" do
     key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDSAFOCkXC61jeb/L8FeDn8nfb5bre5ph3a1vvHWvs7amQw7JIgy3rP6uqPZabJCNWxGdORGP5lNNwdQ1s7hdteQvoUlPTg1WXFr7ZJ9pUNuAB0nyasY+7tEzJWJvXAUx7eZOhxI7qfgH0E9AAkMpqZ6o9uQfu2Ov8uAj2tXQNtXbkn0N4jOXqJvIXY9MJu7/FTH6TReeQyJoUfUAhlDWXmtE+T7YySyVDzOprM41tXGY5KUYgPQUAWXNVzAkMdlLf6dU9HIRvzEgYMkL+ka0W25gEaQlgas8gahkDuKVaT/5WkOcEaf3HnM+NMNPwXw626IB/w/Y9BCTHczDspoKbB montuori@joe-cool.local"
 
-    # -- add teh key
+    # -- add the key
     res = DigOc.ssh_keys :add, name: "testkey2", ssh_pub_key: key
     assert res["status"] == "OK"
 
@@ -78,6 +78,11 @@ defmodule DigitalOceanApiTest do
     assert res["status"] == "ERROR"
   end
     
-
+  
+  test "get sizes" do
+    res = DigOc.sizes
+    assert res["status"] == "OK"
+  end
+  
 
 end
