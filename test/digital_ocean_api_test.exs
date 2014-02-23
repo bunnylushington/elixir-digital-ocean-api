@@ -50,24 +50,12 @@ defmodule DigitalOceanApiTest do
     assert res["status"] == "OK"
   end
 
-  test "add ssh key" do
+  test "create, lookup, destroy ssh key" do
     key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDSAFOCkXC61jeb/L8FeDn8nfb5bre5ph3a1vvHWvs7amQw7JIgy3rP6uqPZabJCNWxGdORGP5lNNwdQ1s7hdteQvoUlPTg1WXFr7ZJ9pUNuAB0nyasY+7tEzJWJvXAUx7eZOhxI7qfgH0E9AAkMpqZ6o9uQfu2Ov8uAj2tXQNtXbkn0N4jOXqJvIXY9MJu7/FTH6TReeQyJoUfUAhlDWXmtE+T7YySyVDzOprM41tXGY5KUYgPQUAWXNVzAkMdlLf6dU9HIRvzEgYMkL+ka0W25gEaQlgas8gahkDuKVaT/5WkOcEaf3HnM+NMNPwXw626IB/w/Y9BCTHczDspoKbB montuori@joe-cool.local"
-    res = DigOc.ssh_keys :add, [name: "testkey", ssh_pub_key: key]
+    res = DigOc.ssh_keys :add, [name: "testkey2", ssh_pub_key: key]
     assert res["status"] == "OK"
-  end
-
-  test "get ssh key id for label" do
-    assert is_integer(DigOc.Utility.ssh_key_id("testkey"))
-    assert DigOc.Utility.ssh_key_id(1234) == 1234
-  end
-
-  test "get ssh key" do
-    res = DigOc.ssh_keys :get, "testkey"
-    assert res["status"] == "OK"
-  end
-
-  test "destroy ssh key" do
-    id = DigOc.Utility.ssh_key_id("testkey")
+    id = DigOc.Utility.ssh_key_id("testkey2")
+    assert is_integer(id)
     res = DigOc.ssh_keys :delete, id
     assert res["status"] == "OK"
     res = DigOc.ssh_keys :delete, id
