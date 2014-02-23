@@ -43,6 +43,10 @@ defmodule DigitalOceanApiTest do
   test "/images" do
     res = DigOc.Raw.images
     assert res["status"] == "OK"
+
+    images = DigOc.images
+    assert is_list(images)
+    assert is_record(hd(images), DigOc.Image)
   end
 
   test "/ssh_keys" do

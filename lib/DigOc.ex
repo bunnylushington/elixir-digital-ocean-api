@@ -23,6 +23,11 @@ defmodule DigOc do
     public: nil,
     regions: nil
     
+  def images do
+    res = DigOc.Raw.images
+    Enum.map res["images"], fn(d) -> DigOc.Convert.to_image_record(d) end
+  end
+
 
   # -------------------------------------------------- /ssh_keys
   def ssh_keys do
