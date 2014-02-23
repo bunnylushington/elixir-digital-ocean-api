@@ -80,7 +80,7 @@ defmodule DigitalOceanApiTest do
     
   
   test "get sizes" do
-    res = DigOc.sizes
+    res = DigOc.Raw.sizes
     assert res["status"] == "OK"
   end
   

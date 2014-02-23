@@ -48,9 +48,32 @@ defmodule DigOc do
 
 
   # -------------------------------------------------- /sizes
-  def sizes do 
-    {:ok, res} = DigOc.Client.get("/sizes").body
-    res
-  end
+  defrecord Size, 
+    cost_per_hour: nil, 
+    cost_per_month: nil,
+    name: nil, 
+    id: nil,
+    memory: nil,
+    slug: nil,
+    cpu: nil,
+    disk: nil
   
+  def sizes do
+    res = DigOc.Raw.sizes
+    Enum.map res["sizes"], fn(d) -> size_dict_to_record(d) end
+  end
+
+  def size_dict_to_record(d) do
+    Size.new(cost_per_hour:  d["cost_per_hour"],
+             cost_per_month: d["cost_per_month"],
+             name:           d["name"],
+             id:             d["id"],
+             memory:         d["memory"],
+             slug:           d["slug"],
+             cpu:            d["cpu"],
+             disk:           d["disk"])
+  end
+             
+
+    
 end
