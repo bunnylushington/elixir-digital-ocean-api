@@ -10,7 +10,9 @@ defmodule DigitalOceanApi.Mixfile do
   end
 
   def application do
-    []
+    [ registered: [:digoc],
+      mod: { DigOc.App, [] }
+    ]
   end
 
   defp deps do
