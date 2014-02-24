@@ -1,6 +1,18 @@
 defmodule AdvDropletTest do
   use ExUnit.Case
 
+  defmacro test_event(evt, drop) do
+    quote do
+      droplet = DigOc.droplet(unquote(drop)) |> hd
+      event_id = DigOc.droplets droplet.id, unquote(evt)
+      assert is_integer(event_id)
+      
+      event = DigOc.events event_id
+      assert is_record(event, DigOc.Event)
+      assert DigOc.event_progress(event) == :ok
+    end
+  end
+
   if System.get_env("DIGOC_DROPLET_TEST") do
    
     test "advanced droplet manipulation" do
@@ -27,7 +39,9 @@ defmodule AdvDropletTest do
       assert is_integer(droplet.event_id)
       assert DigOc.event_progress(droplet.event_id) == :ok
 
-      droplet = DigOc.droplet("apitest")
+      # -- delete test droplet
+      test_event :destroy, "adv-apitest"
+      droplet = DigOc.droplet("adv-apitest")
       assert droplet == []
     end
 

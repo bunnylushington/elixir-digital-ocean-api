@@ -19,9 +19,10 @@ defmodule DigOc do
     ip_address: nil,
     event_id: nil
 
-  defmacro droplet_action(id, action) do
+  defmacro droplet_action(id, action, params \\ nil) do
     quote do
-      res = DigOc.Raw.raw_droplet_action(unquote(id), unquote(action))
+      res = DigOc.Raw.raw_droplet_action(unquote(id), unquote(action), 
+                                         unquote(params))
       res["event_id"]
     end
   end

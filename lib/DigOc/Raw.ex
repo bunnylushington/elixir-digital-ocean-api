@@ -12,7 +12,7 @@ defmodule DigOc.Raw do
     res
   end
 
-  defmacro droplet_action(id, action, params \\ nil) do
+  defmacro raw_droplet_action(id, action, params \\ nil) do
     quote do
       base = "/droplets/#{ unquote(id) }/#{ unquote(action) }"
       url = if nil?(unquote(params)), do: base, 
