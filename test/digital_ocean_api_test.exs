@@ -56,7 +56,6 @@ defmodule DigitalOceanApiTest do
     new_drop_2 = DigOc.droplet(drop.name) |> hd
     assert drop == new_drop_1
     assert drop == new_drop_2
-
   end
   
   test "/regions" do

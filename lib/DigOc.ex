@@ -76,6 +76,8 @@ defmodule DigOc do
 
 
   # -------------------------------------------------- /ssh_keys
+  #
+  # NB: Still using the "raw" format here.
   def ssh_keys do
     {:ok, res} = DigOc.Client.get("/ssh_keys").body
     res
