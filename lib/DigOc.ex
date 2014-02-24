@@ -21,7 +21,7 @@ defmodule DigOc do
 
   defmacro droplet_action(id, action) do
     quote do
-      res = DigOc.Raw.droplet_action(unquote(id), unquote(action))
+      res = DigOc.Raw.raw_droplet_action(unquote(id), unquote(action))
       res["event_id"]
     end
   end
@@ -44,6 +44,7 @@ defmodule DigOc do
   def droplets(id, :shutdown),       do: droplet_action(id, :shutdown)
   def droplets(id, :destroy),        do: droplet_action(id, :destroy)
     
+
   def droplet(name) when is_binary(name) do
     Enum.filter droplets, fn(d) -> d.name == name end
   end

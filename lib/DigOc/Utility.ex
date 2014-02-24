@@ -12,6 +12,7 @@ defmodule DigOc.Utility do
   def auth, do: "client_id=#{ client_id }&api_key=#{ api_key }"
 
   # -- for some reason the "?" screws up emacs's font-lock?
+  def qs(nil), do: ""
   def qs(params), do: "?" <> encode_query params #"?" 
   
   def encode_query(params) do
