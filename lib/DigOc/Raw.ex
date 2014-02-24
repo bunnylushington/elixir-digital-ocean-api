@@ -12,14 +12,11 @@ defmodule DigOc.Raw do
     res
   end
 
-  defmacro raw_droplet_action(id, action, params \\ nil) do
-    quote do
-      base = "/droplets/#{ unquote(id) }/#{ unquote(action) }"
-      url = if nil?(unquote(params)), do: base, 
-               else: base <> qs(unquote(params))
+  def droplet_action(id, action, params \\ nil) do
+      base = "/droplets/#{ id }/#{ action }"
+      url = if nil?(params), do: base, else: base <> qs(params)
       {:ok, res} = DigOc.Client.get(url).body
       res
-    end
   end
 
   def regions do

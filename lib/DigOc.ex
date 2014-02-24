@@ -19,12 +19,9 @@ defmodule DigOc do
     ip_address: nil,
     event_id: nil
 
-  defmacro droplet_action(id, action, params \\ nil) do
-    quote do
-      res = DigOc.Raw.raw_droplet_action(unquote(id), unquote(action), 
-                                         unquote(params))
-      res["event_id"]
-    end
+  def droplet_action(id, action, params \\ nil) do
+    res = DigOc.Raw.droplet_action(id, action, params)
+    res["event_id"]
   end
 
   def droplets do
@@ -45,10 +42,28 @@ defmodule DigOc do
   def droplets(id, :shutdown),       do: droplet_action(id, :shutdown)
   def droplets(id, :destroy),        do: droplet_action(id, :destroy)
     
-  # def droplets(id, :rename, name) do 
-  #   droplet_action(id, :rename, [name: name])
-  # end
+  def droplets(id, :rename, name) do 
+    droplet_action(id, :rename, [name: name])
+  end
 
+  def droplets(id, :snapshot, snapshot_name) do
+    droplet_action(id, :snapshot, [name: snapshot_name])
+  end
+
+  def droplets(id, :restore, image) do
+    id_or_slug = if is_record(image, Image), do: image.id, else: image
+    droplet_action(id, :restore, id_or_slug)
+  end
+
+  def droplets(id, :resize, size) do
+    id_or_slug = if is_record(size, Size), do: size.id, else: size
+    droplet_action(id, :resize, id_or_slug)
+  end
+  
+  def droplets(id, :rebuild, image) do
+    id_or_slug = if is_record(image, Image), do: image.id, else: image
+    droplet_action(id, :rebuild, id_or_slug)
+  end
 
   def droplet(name) when is_binary(name) do
     Enum.filter droplets, fn(d) -> d.name == name end
