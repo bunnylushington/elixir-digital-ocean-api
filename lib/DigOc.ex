@@ -29,9 +29,17 @@ defmodule DigOc do
     slug: nil
 
   def regions do
-    res = DigOc.Raw.regions
-    Enum.map res["regions"], fn(d) -> DigOc.Convert.to_region_record(d) end
+    case DigOc.Cache.get :regions do
+      :not_found ->
+        res = DigOc.Raw.regions
+        data = Enum.map res["regions"], 
+                    fn(d) -> DigOc.Convert.to_region_record(d) end
+        DigOc.Cache.update_cache :regions, data
+      {:ok, data} -> data
+    end
   end
+  
+  def region(id), do: DigOc.Cache.get(:regions, id, &DigOc.regions/0)
 
   # -------------------------------------------------- /images
   defrecord Image, 
@@ -44,9 +52,17 @@ defmodule DigOc do
     regions: nil
     
   def images do
-    res = DigOc.Raw.images
-    Enum.map res["images"], fn(d) -> DigOc.Convert.to_image_record(d) end
+    case DigOc.Cache.get :images do
+      :not_found ->
+        res = DigOc.Raw.images
+        data = Enum.map res["images"], 
+                    fn(d) -> DigOc.Convert.to_image_record(d) end
+        DigOc.Cache.update_cache :images, data
+      {:ok, data} -> data
+    end
   end
+
+  def image(id), do: DigOc.Cache.get(:images, id, &DigOc.images/0)
 
 
   # -------------------------------------------------- /ssh_keys
@@ -89,8 +105,16 @@ defmodule DigOc do
     disk: nil
   
   def sizes do
-    res = DigOc.Raw.sizes
-    Enum.map res["sizes"], fn(d) -> DigOc.Convert.to_size_record(d) end
+    case DigOc.Cache.get :sizes do
+      :not_found ->
+        res = DigOc.Raw.sizes
+        data = Enum.map res["sizes"], 
+                    fn(d) -> DigOc.Convert.to_size_record(d) end
+        DigOc.Cache.update_cache :sizes, data
+      {:ok, data} -> data
+    end
   end
     
+  def size(id), do: DigOc.Cache.get(:sizes, id, &DigOc.sizes/0)
+
 end
