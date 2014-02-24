@@ -12,14 +12,12 @@ defmodule DigOc.Raw do
     res
   end
 
-  def droplets(id, :reboot) do
-    {:ok, res} = DigOc.Client.get("/droplets/#{ id }/reboot").body
-    res
-  end
-
-  def droplets(id, :power_cycle) do
-    {:ok, res} = DigOc.Client.get("/droplets/#{ id }/power_cycle").body
-    res
+  defmacro droplet_action(id, action) do
+    quote do
+      {:ok, res} = 
+        DigOc.Client.get("/droplets/#{ unquote(id) }/#{ unquote(action) }").body
+      res
+    end
   end
 
   def regions do

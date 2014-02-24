@@ -14,7 +14,8 @@ defmodule DigOc.Convert do
                       size:               DigOc.size(d["size_id"]),
                       region_id:          d["region_id"],
                       region:             DigOc.region(d["region_id"]),
-                      ip_address:         d["ip_address"])
+                      ip_address:         d["ip_address"],
+                      event_id:           d["event_id"])
   end
 
   def to_region_record(d) do

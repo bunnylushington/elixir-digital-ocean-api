@@ -1,4 +1,5 @@
 defmodule DigOc do
+  require DigOc.Raw
 
   # -------------------------------------------------- /droplets
   defrecord Droplet,
@@ -18,10 +19,30 @@ defmodule DigOc do
     ip_address: nil,
     event_id: nil
 
+  defmacro droplet_action(id, action) do
+    quote do
+      res = DigOc.Raw.droplet_action(unquote(id), unquote(action))
+      res["event_id"]
+    end
+  end
+
   def droplets do
     res = DigOc.Raw.droplets
     Enum.map res["droplets"], fn(d) -> DigOc.Convert.to_droplet_record(d) end
   end
+
+  def droplets(:new, params) do
+    res = DigOc.Raw.droplets(:new, params)
+    DigOc.Convert.to_droplet_record(res["droplet"])
+  end
+
+  def droplets(id, :reboot),         do: droplet_action(id, :reboot)
+  def droplets(id, :power_cycle),    do: droplet_action(id, :power_cycle)
+  def droplets(id, :power_off),      do: droplet_action(id, :power_off)
+  def droplets(id, :power_on),       do: droplet_action(id, :power_on)
+  def droplets(id, :password_reset), do: droplet_action(id, :password_reset)
+  def droplets(id, :shutdown),       do: droplet_action(id, :shutdown)
+  def droplets(id, :destroy),        do: droplet_action(id, :destroy)
     
   def droplet(name) when is_binary(name) do
     Enum.filter droplets, fn(d) -> d.name == name end
@@ -30,22 +51,6 @@ defmodule DigOc do
   def droplet(id) when is_integer(id) do
     Enum.filter droplets, fn(d) -> d.id == id end
   end
-
-  def droplets(:new, params) do
-    res = DigOc.Raw.droplets(:new, params)
-    DigOc.Convert.to_droplet_record(res["droplet"])
-  end
-    
-  def droplets(id, :reboot) do
-    res = DigOc.Raw.droplets(id, :reboot)
-    res["event_id"]
-  end
-
-  def droplets(id, :power_cycle) do
-    res = DigOc.Raw.droplets(id, :power_cycle)
-    res["event_id"]
-  end
-
 
   # -------------------------------------------------- /regions
   defrecord Region,
@@ -177,8 +182,7 @@ defmodule DigOc do
       event.percentage == "100" -> :ok
       event.action_status == "done" -> :ok
       true -> 
-        IO.puts "Waiting for event #{ inspect event }"
-        :timer.sleep(5 * 1000)
+        :timer.sleep(20 * 1000)
         event_progress(event)
     end
   end
