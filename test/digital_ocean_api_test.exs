@@ -77,8 +77,12 @@ defmodule DigitalOceanApiTest do
   end
 
   test "/ssh_keys" do
-    res = DigOc.ssh_keys
+    res = DigOc.Raw.ssh_keys
     assert res["status"] == "OK"
+    
+    keys = DigOc.ssh_keys
+    assert is_list(keys)
+    assert is_record(hd(keys), DigOc.SSHKey)
   end
 
   test "create, lookup, destroy ssh key" do
@@ -86,27 +90,29 @@ defmodule DigitalOceanApiTest do
 
     # -- add the key
     res = DigOc.ssh_keys :add, name: "testkey2", ssh_pub_key: key
-    assert res["status"] == "OK"
+    assert is_record(res, DigOc.SSHKey)
+    assert res.name == "testkey2"
+    assert res.ssh_pub_key == key
 
     # -- lookup the key's id
     id = DigOc.Utility.ssh_key_id("testkey2")
     assert is_integer(id)
 
     # -- fetch the key
-    res = DigOc.ssh_keys id
-    assert res["status"] == "OK"
+    sshkey = DigOc.ssh_keys id
+    assert sshkey.name == "testkey2"
 
     # -- edit the key
-    res = DigOc.ssh_keys id, :edit, ssh_pub_key: key
-    assert res["status"] == "OK"
+    sshkey = DigOc.ssh_keys id, :edit, ssh_pub_key: key
+    assert sshkey.name == "testkey2"
     
     # -- delete the key
     res = DigOc.ssh_keys id, :destroy
-    assert res["status"] == "OK"
+    assert res == :ok
 
     # -- ensure the key is deleted
     res = DigOc.ssh_keys id, :destroy
-    assert res["status"] == "ERROR"
+    assert res == :error
   end
     
   

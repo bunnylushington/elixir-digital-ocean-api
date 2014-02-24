@@ -17,9 +17,11 @@ defmodule DigOc.Utility do
   def ssh_key_id(l) do
     case is_integer l do
       true -> l
-      false -> res = DigOc.ssh_keys
-               Enum.filter_map(res["ssh_keys"], fn(x) -> x["name"] == l end,
-                               &Dict.fetch!(&1, "id")) |> hd
+      false -> rec = Enum.filter DigOc.ssh_keys, fn(r) -> r.name == l end
+               case rec do
+                 [] -> nil
+                 _ -> hd(rec).id
+               end
     end
   end
   

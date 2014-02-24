@@ -33,6 +33,17 @@ defmodule DigOc.Convert do
                     regions:      d["regions"])
   end
 
+  def to_abbr_sshkey_record(d) do
+    DigOc.SSHKey.new(id:   d["id"],
+                     name: d["name"])
+  end
+
+  def to_sshkey_record(d) do
+    DigOc.SSHKey.new(id:          d["id"],
+                     name:        d["name"],
+                     ssh_pub_key: d["ssh_pub_key"])
+  end
+
   def to_size_record(d) do
     DigOc.Size.new(cost_per_hour:  d["cost_per_hour"],
                    cost_per_month: d["cost_per_month"],

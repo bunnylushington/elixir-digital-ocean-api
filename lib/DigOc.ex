@@ -1,5 +1,4 @@
 defmodule DigOc do
-  import DigOc.Utility, only: [qs: 1, ssh_key_id: 1]
 
   # -------------------------------------------------- /droplets
   defrecord Droplet,
@@ -78,30 +77,38 @@ defmodule DigOc do
   # -------------------------------------------------- /ssh_keys
   #
   # NB: Still using the "raw" format here.
+  defrecord SSHKey,
+    id: nil,
+    name: nil,
+    ssh_pub_key: nil
+
   def ssh_keys do
-    {:ok, res} = DigOc.Client.get("/ssh_keys").body
-    res
+    res = DigOc.Raw.ssh_keys
+    Enum.map res["ssh_keys"], 
+         fn(d) -> DigOc.Convert.to_abbr_sshkey_record(d) end
   end
 
   def ssh_keys(id) do
-    {:ok, res} = DigOc.Client.get("/ssh_keys/#{ ssh_key_id id }").body
-    res
+    res = DigOc.Raw.ssh_keys(id)
+    DigOc.Convert.to_sshkey_record(res["ssh_key"])
   end
 
   def ssh_keys(:add, params) do
-    {:ok, res} = DigOc.Client.get("/ssh_keys/new/" <> qs(params)).body
-    res
+    res = DigOc.Raw.ssh_keys :add, params
+    DigOc.Convert.to_sshkey_record(res["ssh_key"])    
   end
 
   def ssh_keys(id, :destroy) do
-    {:ok, res} = DigOc.Client.get("/ssh_keys/#{ ssh_key_id id}/destroy").body
-    res
+    res = DigOc.Raw.ssh_keys id, :destroy
+    case res["status"] do
+      "OK" -> :ok
+      _ -> :error
+    end
   end
 
   def ssh_keys(id, :edit, params) do
-    url = "/ssh_keys/#{ ssh_key_id id }/edit/" <> qs(params)
-    {:ok, res} = DigOc.Client.get(url).body
-    res
+    res = DigOc.Raw.ssh_keys id, :edit, params
+    DigOc.Convert.to_sshkey_record(res["ssh_key"])
   end
 
 
