@@ -45,6 +45,10 @@ defmodule DigOc do
   def droplets(id, :shutdown),       do: droplet_action(id, :shutdown)
   def droplets(id, :destroy),        do: droplet_action(id, :destroy)
     
+  # def droplets(id, :rename, name) do 
+  #   droplet_action(id, :rename, [name: name])
+  # end
+
 
   def droplet(name) when is_binary(name) do
     Enum.filter droplets, fn(d) -> d.name == name end

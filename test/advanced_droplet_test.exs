@@ -38,10 +38,11 @@ defmodule AdvDropletTest do
       assert droplet.name == name
       assert is_integer(droplet.event_id)
       assert DigOc.event_progress(droplet.event_id) == :ok
+      id = droplet.id
 
       # -- delete test droplet
-      test_event :destroy, "adv-apitest"
-      droplet = DigOc.droplet("adv-apitest")
+      test_event :destroy, id
+      droplet = DigOc.droplet(id)
       assert droplet == []
     end
 
