@@ -6,6 +6,22 @@ defmodule DigOc.Raw do
     res
   end
 
+  def droplets(:new, params) do
+    url = "/droplets/new" <> qs(params)
+    {:ok, res} = DigOc.Client.get(url).body
+    res
+  end
+
+  def droplets(id, :reboot) do
+    {:ok, res} = DigOc.Client.get("/droplets/#{ id }/reboot").body
+    res
+  end
+
+  def droplets(id, :power_cycle) do
+    {:ok, res} = DigOc.Client.get("/droplets/#{ id }/power_cycle").body
+    res
+  end
+
   def regions do
     {:ok, res} = DigOc.Client.get("/regions").body
     res
@@ -44,6 +60,11 @@ defmodule DigOc.Raw do
 
   def sizes do 
     {:ok, res} = DigOc.Client.get("/sizes").body
+    res
+  end
+
+  def events(id) do
+    {:ok, res} = DigOc.Client.get("/events/#{ id }/").body
     res
   end
 

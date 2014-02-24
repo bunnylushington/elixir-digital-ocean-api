@@ -15,7 +15,8 @@ defmodule DigOc do
     size: nil,
     region_id: nil,
     region: nil,
-    ip_address: nil
+    ip_address: nil,
+    event_id: nil
 
   def droplets do
     res = DigOc.Raw.droplets
@@ -29,7 +30,22 @@ defmodule DigOc do
   def droplet(id) when is_integer(id) do
     Enum.filter droplets, fn(d) -> d.id == id end
   end
-  
+
+  def droplets(:new, params) do
+    res = DigOc.Raw.droplets(:new, params)
+    DigOc.Convert.to_droplet_record(res["droplet"])
+  end
+    
+  def droplets(id, :reboot) do
+    res = DigOc.Raw.droplets(id, :reboot)
+    res["event_id"]
+  end
+
+  def droplets(id, :power_cycle) do
+    res = DigOc.Raw.droplets(id, :power_cycle)
+    res["event_id"]
+  end
+
 
   # -------------------------------------------------- /regions
   defrecord Region,
@@ -135,5 +151,37 @@ defmodule DigOc do
   end
     
   def size(id), do: DigOc.Cache.get(:sizes, id, &DigOc.sizes/0)
+
+  
+  # -------------------------------------------------- /events
+  defrecord Event,
+    id: nil,
+    action_status: nil,
+    droplet_id: nil,
+    event_type_id: nil,
+    percentage: nil
+
+  def events(id) do
+    res = DigOc.Raw.events(id)
+    DigOc.Convert.to_event_record(res["event"])
+  end
+
+  def event_progress(id) when is_integer(id) do
+    event = events id
+    event_progress(event)
+  end
+
+  def event_progress(event) when is_record(event, Event) do
+    event = events event.id
+    cond do
+      event.percentage == "100" -> :ok
+      event.action_status == "done" -> :ok
+      true -> 
+        IO.puts "Waiting for event #{ inspect event }"
+        :timer.sleep(5 * 1000)
+        event_progress(event)
+    end
+  end
+                                   
 
 end

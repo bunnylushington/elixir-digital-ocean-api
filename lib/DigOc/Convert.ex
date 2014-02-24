@@ -55,6 +55,14 @@ defmodule DigOc.Convert do
                    disk:           d["disk"])
   end
 
+  def to_event_record(d) do
+    DigOc.Event.new(id:            d["id"],
+                    action_status: d["action_status"],
+                    droplet_id:    d["droplet_id"],
+                    event_type_id: d["event_type_id"],
+                    percentage:    d["percentage"])
+  end
+
 
   def to_cache_record(l), do: HashDict.new(Enum.map l, fn(r) -> {r.id, r} end)
 

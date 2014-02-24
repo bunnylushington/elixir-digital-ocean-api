@@ -12,8 +12,17 @@ defmodule DigOc.Utility do
   def auth, do: "client_id=#{ client_id }&api_key=#{ api_key }"
 
   # -- for some reason the "?" screws up emacs's font-lock?
-  def qs(params), do: "?" <> URI.encode_query params #"?" 
-    
+  def qs(params), do: "?" <> encode_query params #"?" 
+  
+  def encode_query(params) do
+    URI.encode_query Enum.map(params, 
+                               fn({k, v}) -> case is_list(v) do
+                                               true -> {k, Enum.join(v, ",")}
+                                               false -> {k, v}
+                                             end
+                               end)
+  end
+
   def ssh_key_id(l) do
     case is_integer l do
       true -> l
