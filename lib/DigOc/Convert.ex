@@ -7,10 +7,13 @@ defmodule DigOc.Convert do
                       name:               d["name"],
                       created_at:         d["created_at"],
                       image_id:           d["image_id"],
+                      image:              DigOc.image(d["image_id"]),
                       locked:             d["locked"],
                       id:                 d["id"],
                       size_id:            d["size_id"],
+                      size:               DigOc.size(d["size_id"]),
                       region_id:          d["region_id"],
+                      region:             DigOc.region(d["region_id"]),
                       ip_address:         d["ip_address"])
   end
 

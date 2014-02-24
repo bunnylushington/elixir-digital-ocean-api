@@ -9,10 +9,13 @@ defmodule DigOc do
     name: nil,
     created_at: nil,
     image_id: nil,
+    image: nil,
     locked: nil,
     id: nil,
     size_id: nil,
+    size: nil,
     region_id: nil,
+    region: nil,
     ip_address: nil
 
   def droplets do
@@ -20,6 +23,13 @@ defmodule DigOc do
     Enum.map res["droplets"], fn(d) -> DigOc.Convert.to_droplet_record(d) end
   end
     
+  def droplet(name) when is_binary(name) do
+    Enum.filter droplets, fn(d) -> d.name == name end
+  end
+
+  def droplet(id) when is_integer(id) do
+    Enum.filter droplets, fn(d) -> d.id == id end
+  end
   
 
   # -------------------------------------------------- /regions
