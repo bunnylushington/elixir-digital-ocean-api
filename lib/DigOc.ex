@@ -52,17 +52,17 @@ defmodule DigOc do
 
   def droplets(id, :restore, image) do
     id_or_slug = if is_record(image, Image), do: image.id, else: image
-    droplet_action(id, :restore, id_or_slug)
+    droplet_action(id, :restore, [image_id: id_or_slug])
   end
 
   def droplets(id, :resize, size) do
     id_or_slug = if is_record(size, Size), do: size.id, else: size
-    droplet_action(id, :resize, id_or_slug)
+    droplet_action(id, :resize, [size_id: id_or_slug])
   end
   
   def droplets(id, :rebuild, image) do
     id_or_slug = if is_record(image, Image), do: image.id, else: image
-    droplet_action(id, :rebuild, id_or_slug)
+    droplet_action(id, :rebuild, [image_id: id_or_slug])
   end
 
   def droplet(name) when is_binary(name) do
@@ -73,7 +73,8 @@ defmodule DigOc do
     Enum.filter droplets, fn(d) -> d.id == id end
   end
 
-  
+
+  # -- convenience methods.
   def take_snapshot(droplet, snapshot_name) do
     droplet = hd(droplet droplet)
     id = droplet.id
@@ -92,6 +93,23 @@ defmodule DigOc do
     Enum.filter DigOc.images, fn(i) -> i.name == snapshot_name end
   end
     
+  
+  def resize(droplet, size) do
+    droplet = hd(droplet droplet)
+    id = droplet.id
+    beginning_state = droplet.status
+    if beginning_state == "active" do
+      evt = droplets id, :power_off
+      event_progress evt
+    end
+    evt = droplets id, :resize, size
+    event_progress evt
+    if beginning_state == "active" do
+      evt = droplets id, :power_on
+      event_progress evt
+    end
+    droplet id
+  end
 
 
   # -------------------------------------------------- /regions
