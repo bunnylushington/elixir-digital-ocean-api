@@ -93,10 +93,10 @@ defmodule DigOc do
     Enum.filter DigOc.images, fn(i) -> i.name == snapshot_name end
   end
     
-  
   def resize(droplet, size) do
     droplet = hd(droplet droplet)
     id = droplet.id
+    size = if is_record(size, Size), do: size.id, else: size
     beginning_state = droplet.status
     if beginning_state == "active" do
       evt = droplets id, :power_off
@@ -110,6 +110,43 @@ defmodule DigOc do
     end
     droplet id
   end
+
+  def restore(droplet, image) do
+    droplet = hd(droplet droplet)
+    id = droplet.id
+    image = if is_record(image, Image), do: image.id, else: image
+    beginning_state = droplet.status
+    if beginning_state == "active" do
+      evt = droplets id, :power_off
+      event_progress evt
+    end
+    evt = droplets id, :restore, image
+    event_progress evt
+    if beginning_state == "active" do
+      evt = droplets id, :power_on
+      event_progress evt
+    end
+    droplet id
+  end
+
+  def rebuild(droplet, image) do
+    droplet = hd(droplet droplet)
+    id = droplet.id
+    image = if is_record(image, Image), do: image.id, else: image
+    beginning_state = droplet.status
+    if beginning_state == "active" do
+      evt = droplets id, :power_off
+      event_progress evt
+    end
+    evt = droplets id, :rebuild, image
+    event_progress evt
+    if beginning_state == "active" do
+      evt = droplets id, :power_on
+      event_progress evt
+    end
+    droplet id
+  end
+
 
 
   # -------------------------------------------------- /regions
