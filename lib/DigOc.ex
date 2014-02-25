@@ -75,7 +75,7 @@ defmodule DigOc do
 
   
   def take_snapshot(droplet, snapshot_name) do
-    droplet = droplet droplet
+    droplet = hd(droplet droplet)
     id = droplet.id
     beginning_state = droplet.status
     if beginning_state == "active" do 
@@ -88,8 +88,8 @@ defmodule DigOc do
       evt = droplets id, :power_on
       event_progress evt
     end
-
-    # clear cache, get snapshot...
+    DigOc.Cache.clear
+    Enum.filter DigOc.images, fn(i) -> i.name == snapshot_name end
   end
     
 
