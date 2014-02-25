@@ -1,12 +1,12 @@
 defmodule DigOc.Cache.Supervisor do
   use Supervisor.Behaviour
 
-  def start_link(cache) do
-    :supervisor.start_link(__MODULE__, cache)
+  def start_link(args) do
+    :supervisor.start_link(__MODULE__, args)
   end
 
-  def init(cache) do
-    children = [ worker(DigOc.Cache.Server, [cache]) ]
+  def init(args) do
+    children = [ worker(DigOc.Cache.Server, [args]) ]
     supervise children, strategy: :one_for_one
   end
 end
@@ -36,17 +36,19 @@ defmodule DigOc.Cache do
     end
   end
 
+  def clear, do: :gen_server.cast(:cache, :clear)
+
 end
 
 defmodule DigOc.Cache.Server do
   use GenServer.Behaviour
 
-  def start_link(cache) do
-    :gen_server.start_link({ :local, :cache }, __MODULE__, cache, [])
+  def start_link(args) do
+    :gen_server.start_link({ :local, :cache }, __MODULE__, args, [])
   end
 
-  def init(cache) do
-    { :ok, cache }
+  def init(_args) do
+    { :ok, HashDict.new }
   end
 
   def handle_call(:get, _from, cache) do
@@ -76,5 +78,7 @@ defmodule DigOc.Cache.Server do
     new_cache = Dict.put cache, datatype, DigOc.Convert.to_cache_record(data)
     { :reply, data, new_cache }
   end
+
+  def handle_cast(:clear, _cache), do: { :noreply, HashDict.new }
 
 end

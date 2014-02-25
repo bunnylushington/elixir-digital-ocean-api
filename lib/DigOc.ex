@@ -43,11 +43,11 @@ defmodule DigOc do
   def droplets(id, :destroy),        do: droplet_action(id, :destroy)
     
   def droplets(id, :rename, name) do 
-    droplet_action(id, :rename, [name: name])
+    droplet_action id, :rename, [name: name]
   end
 
   def droplets(id, :snapshot, snapshot_name) do
-    droplet_action(id, :snapshot, [name: snapshot_name])
+    droplet_action id, :snapshot, [name: snapshot_name]
   end
 
   def droplets(id, :restore, image) do
@@ -72,6 +72,27 @@ defmodule DigOc do
   def droplet(id) when is_integer(id) do
     Enum.filter droplets, fn(d) -> d.id == id end
   end
+
+  
+  def take_snapshot(droplet, snapshot_name) do
+    droplet = droplet droplet
+    id = droplet.id
+    beginning_state = droplet.status
+    if beginning_state == "active" do 
+      evt = droplets id, :power_off
+      event_progress evt
+    end
+    evt = droplets id, :snapshot, snapshot_name
+    event_progress evt
+    if beginning_state == "active" do
+      evt = droplets id, :power_on
+      event_progress evt
+    end
+
+    # clear cache, get snapshot...
+  end
+    
+
 
   # -------------------------------------------------- /regions
   defrecord Region,

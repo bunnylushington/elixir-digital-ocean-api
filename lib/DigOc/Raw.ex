@@ -16,6 +16,7 @@ defmodule DigOc.Raw do
       base = "/droplets/#{ id }/#{ action }"
       url = if nil?(params), do: base, else: base <> qs(params)
       {:ok, res} = DigOc.Client.get(url).body
+      IO.puts inspect(res)
       res
   end
 

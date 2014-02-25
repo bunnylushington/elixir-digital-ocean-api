@@ -3,7 +3,7 @@ defmodule DigOc.App do
   
   def start(_type, _args) do
     HTTPotion.start
-    DigOc.Cache.Supervisor.start_link(HashDict.new)
+    DigOc.Cache.Supervisor.start_link([])
   end
 
 end
