@@ -1,6 +1,9 @@
 defmodule DigOc do
   require DigOc.Raw
 
+  # -- API Stuff.
+  def clear_cache, do: DigOc.Cache.clear
+
   # -------------------------------------------------- /droplets
   defrecord Droplet,
     backups_active: nil,
@@ -193,8 +196,10 @@ defmodule DigOc do
     end
   end
 
-  def image(id), do: DigOc.Cache.get(:images, id, &DigOc.images/0)
-  
+  def image(id) when is_integer(id) do
+    DigOc.Cache.get(:images, id, &DigOc.images/0)
+  end
+
   def images(id) do
     DigOc.Cache.clear
     image id
@@ -209,7 +214,6 @@ defmodule DigOc do
     res = DigOc.Raw.images id, :destroy
     if res["status"] == "OK", do: :ok, else: :error
   end
-
 
   # -------------------------------------------------- /ssh_keys
   #

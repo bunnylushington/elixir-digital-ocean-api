@@ -203,7 +203,7 @@ in the size list until the cache is cleared.
 
 * To clear the cache (asynchronously):
 
-        DigOc.Cache.clear
+        DigOc.clear_cache
 
 
 ## Author
