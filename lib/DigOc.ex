@@ -113,12 +113,6 @@ defmodule DigOc do
     droplet id
   end
 
-  def test(image) do
-    IO.puts "(before) image #{ inspect image }"
-    image = if is_record(image, DigOc.Image), do: image.id, else: image
-    IO.puts "(after) image #{ inspect image }"
-  end
-
   def restore(droplet, image) do
     droplet = hd(droplet droplet)
     id = droplet.id
