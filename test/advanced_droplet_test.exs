@@ -40,6 +40,21 @@ defmodule AdvDropletTest do
       assert DigOc.event_progress(droplet.event_id) == :ok
       id = droplet.id
 
+      snap = DigOc.take_snapshot id, "auto-test-snap"
+      assert is_record(snap, DigOc.Image)
+      
+      restore = hd(DigOc.restore id, snap)
+      assert is_record(restore, DigOc.Droplet)
+
+      rebuild = hd(DigOc.rebuild id, snap)
+      assert is_record(rebuild, DigOc.Droplet)
+      assert rebuild.image_id == snap.id
+
+      size_id = 63 # 1GB instance
+      resize = hd(DigOc.resize id, size_id)
+      assert is_record(resize, DigOc.Droplet)
+      assert resize.size_id == size_id
+
       # -- delete test droplet
       test_event :destroy, id
       droplet = DigOc.droplet(id)

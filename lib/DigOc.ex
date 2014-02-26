@@ -51,20 +51,23 @@ defmodule DigOc do
   end
 
   def droplets(id, :restore, image) do
-    id_or_slug = if is_record(image, Image), do: image.id, else: image
+    id_or_slug = if is_record(image, DigOc.Image), do: image.id, else: image
     droplet_action(id, :restore, [image_id: id_or_slug])
   end
 
   def droplets(id, :resize, size) do
-    id_or_slug = if is_record(size, Size), do: size.id, else: size
+    id_or_slug = if is_record(size, DigOc.Size), do: size.id, else: size
     droplet_action(id, :resize, [size_id: id_or_slug])
   end
   
   def droplets(id, :rebuild, image) do
-    id_or_slug = if is_record(image, Image), do: image.id, else: image
+    id_or_slug = if is_record(image, DigOc.Image), do: image.id, else: image
     droplet_action(id, :rebuild, [image_id: id_or_slug])
   end
 
+
+  # XXX: these are not only poorly named but why isn't /droplets/[id]
+  # implemented anywhere?
   def droplet(name) when is_binary(name) do
     Enum.filter droplets, fn(d) -> d.name == name end
   end
@@ -72,7 +75,6 @@ defmodule DigOc do
   def droplet(id) when is_integer(id) do
     Enum.filter droplets, fn(d) -> d.id == id end
   end
-
 
   # -- convenience methods.
   def take_snapshot(droplet, snapshot_name) do
@@ -90,13 +92,13 @@ defmodule DigOc do
       event_progress evt
     end
     DigOc.Cache.clear
-    Enum.filter DigOc.images, fn(i) -> i.name == snapshot_name end
+    hd(Enum.filter DigOc.images, fn(i) -> i.name == snapshot_name end)
   end
     
   def resize(droplet, size) do
     droplet = hd(droplet droplet)
     id = droplet.id
-    size = if is_record(size, Size), do: size.id, else: size
+    size = if is_record(size, DigOc.Size), do: size.id, else: size
     beginning_state = droplet.status
     if beginning_state == "active" do
       evt = droplets id, :power_off
@@ -111,10 +113,17 @@ defmodule DigOc do
     droplet id
   end
 
+  def test(image) do
+    IO.puts "(before) image #{ inspect image }"
+    image = if is_record(image, DigOc.Image), do: image.id, else: image
+    IO.puts "(after) image #{ inspect image }"
+  end
+
   def restore(droplet, image) do
     droplet = hd(droplet droplet)
     id = droplet.id
-    image = if is_record(image, Image), do: image.id, else: image
+    image = if is_record(image, DigOc.Image), do: image.id, else: image
+    IO.puts "(restore) image is #{ inspect image }"
     beginning_state = droplet.status
     if beginning_state == "active" do
       evt = droplets id, :power_off
@@ -132,7 +141,8 @@ defmodule DigOc do
   def rebuild(droplet, image) do
     droplet = hd(droplet droplet)
     id = droplet.id
-    image = if is_record(image, Image), do: image.id, else: image
+    image = if is_record(image, DigOc.Image), do: image.id, else: image
+    IO.puts "(rebuild) image is #{ inspect image }"
     beginning_state = droplet.status
     if beginning_state == "active" do
       evt = droplets id, :power_off
@@ -190,8 +200,7 @@ defmodule DigOc do
   end
 
   def image(id), do: DigOc.Cache.get(:images, id, &DigOc.images/0)
-
-
+  
   # -------------------------------------------------- /ssh_keys
   #
   # NB: Still using the "raw" format here.
@@ -273,7 +282,7 @@ defmodule DigOc do
     event_progress(event)
   end
 
-  def event_progress(event) when is_record(event, Event) do
+  def event_progress(event) when is_record(event, DigOc.Event) do
     event = events event.id
     cond do
       event.percentage == "100" -> :ok
