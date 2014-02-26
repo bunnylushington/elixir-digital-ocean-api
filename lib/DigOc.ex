@@ -195,6 +195,22 @@ defmodule DigOc do
 
   def image(id), do: DigOc.Cache.get(:images, id, &DigOc.images/0)
   
+  def images(id) do
+    DigOc.Cache.clear
+    image id
+  end
+
+  def images(id, :transfer, region) do
+    res = DigOc.Raw.images id, :transfer, region_id: region
+    res["event_id"]
+  end
+
+  def images(id, :destroy) do
+    res = DigOc.Raw.images id, :destroy
+    if res["status"] == "OK", do: :ok, else: :error
+  end
+
+
   # -------------------------------------------------- /ssh_keys
   #
   # NB: Still using the "raw" format here.

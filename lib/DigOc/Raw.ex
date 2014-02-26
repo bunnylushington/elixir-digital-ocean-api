@@ -30,6 +30,17 @@ defmodule DigOc.Raw do
     res
   end
 
+  def images(id, :transfer, params) do
+    url = "/images/#{ id }/transfer" <> qs(params)
+    {:ok, res} = DigOc.Client.get(url).body
+    res
+  end
+
+  def images(id, :destroy) do
+    {:ok, res} = DigOc.Client.get("/images/#{ id }/destroy").body
+    res
+  end
+
   def ssh_keys do
     {:ok, res} = DigOc.Client.get("/ssh_keys").body
     res
@@ -46,7 +57,7 @@ defmodule DigOc.Raw do
   end
 
   def ssh_keys(id, :destroy) do
-    {:ok, res} = DigOc.Client.get("/ssh_keys/#{ ssh_key_id id}/destroy").body
+    {:ok, res} = DigOc.Client.get("/ssh_keys/#{ ssh_key_id id }/destroy").body
     res
   end
 
