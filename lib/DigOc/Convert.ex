@@ -56,6 +56,16 @@ defmodule DigOc.Convert do
                    disk:           d["disk"])
   end
 
+  def to_domain_record(d) do
+    DigOc.Domain.new(id:                   d["id"],
+                     name:                 d["name"],
+                     ttl:                  d["ttl"],
+                     live_zone_file:       d["live_zone_file"],
+                     error:                d["error"],
+                     zone_file_with_error: d["zone_file_with_error"])
+  end
+
+
   def to_event_record(d) do
     DigOc.Event.new(id:            d["id"],
                     action_status: d["action_status"],

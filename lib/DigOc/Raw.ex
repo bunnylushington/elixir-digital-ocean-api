@@ -72,6 +72,11 @@ defmodule DigOc.Raw do
     res
   end
 
+  def domains do
+    {:ok, res} = DigOc.Client.get("/domains").body
+    res
+  end
+
   def events(id) do
     {:ok, res} = DigOc.Client.get("/events/#{ id }/").body
     res

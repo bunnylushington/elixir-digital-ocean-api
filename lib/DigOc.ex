@@ -278,6 +278,22 @@ defmodule DigOc do
   def size(id), do: DigOc.Cache.get(:sizes, id, &DigOc.sizes/0)
 
   
+
+  # -------------------------------------------------- /domains
+  defrecord Domain,
+    id: nil,
+    name: nil,
+    ttl: nil,
+    live_zone_file: nil,
+    error: nil,
+    zone_file_with_error: nil
+
+  def domains do
+    res = DigOc.Raw.domains
+    Enum.map res["domains"],
+         fn(d) -> DigOc.Convert.to_domain_record(d) end
+  end
+
   # -------------------------------------------------- /events
   defrecord Event,
     id: nil,
