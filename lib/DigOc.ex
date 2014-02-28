@@ -74,8 +74,7 @@ defmodule DigOc do
   end
 
 
-  # XXX: these are not only poorly named but why isn't /droplets/[id]
-  # implemented anywhere?
+  # -- convenience methods.
   def droplet(name) when is_binary(name) do
     Enum.filter droplets, fn(d) -> d.name == name end
   end
@@ -84,81 +83,58 @@ defmodule DigOc do
     Enum.filter droplets, fn(d) -> d.id == id end
   end
 
-  # -- convenience methods.
+  def execute_blocking_action(f, args \\ []) do
+    evt = apply f, args
+    event_progress evt
+  end
+    
+  def power_off(id) do
+    execute_blocking_action(fn() -> droplets id, :power_off end)
+  end
+  
+  def power_on(id) do
+    execute_blocking_action(fn() -> droplets id, :power_on end)
+  end
+
+  def power_off_action(droplet, f, args \\ []) do
+     id = droplet.id
+     beginning_state = droplet.status
+     if beginning_state == "active", do: power_off(id)
+     execute_blocking_action(f, args)
+     if beginning_state == "active", do: power_on(id)
+  end
+
   def take_snapshot(droplet, snapshot_name) do
     droplet = hd(droplet droplet)
-    id = droplet.id
-    beginning_state = droplet.status
-    if beginning_state == "active" do 
-      evt = droplets id, :power_off
-      event_progress evt
-    end
-    evt = droplets id, :snapshot, snapshot_name
-    event_progress evt
-    if beginning_state == "active" do
-      evt = droplets id, :power_on
-      event_progress evt
-    end
+    f = fn(id) -> droplets id, :snapshot, snapshot_name end
+    power_off_action(droplet, f, [droplet.id])
     DigOc.Cache.clear
     hd(Enum.filter DigOc.images, fn(i) -> i.name == snapshot_name end)
   end
     
   def resize(droplet, size) do
     droplet = hd(droplet droplet)
-    id = droplet.id
     size = if is_record(size, DigOc.Size), do: size.id, else: size
-    beginning_state = droplet.status
-    if beginning_state == "active" do
-      evt = droplets id, :power_off
-      event_progress evt
-    end
-    evt = droplets id, :resize, size
-    event_progress evt
-    if beginning_state == "active" do
-      evt = droplets id, :power_on
-      event_progress evt
-    end
-    droplet id
+    f = fn(id, size) -> droplets id, :resize, size end
+    power_off_action(droplet, f, [droplet.id, size])
+    droplet droplet.id
   end
 
   def restore(droplet, image) do
     droplet = hd(droplet droplet)
-    id = droplet.id
     image = if is_record(image, DigOc.Image), do: image.id, else: image
-    IO.puts "(restore) image is #{ inspect image }"
-    beginning_state = droplet.status
-    if beginning_state == "active" do
-      evt = droplets id, :power_off
-      event_progress evt
-    end
-    evt = droplets id, :restore, image
-    event_progress evt
-    if beginning_state == "active" do
-      evt = droplets id, :power_on
-      event_progress evt
-    end
-    droplet id
+    f = fn(id, image) -> droplets id, :restore, image end
+    power_off_action(droplet, f, [droplet.id, image])
+    droplet droplet.id
   end
 
   def rebuild(droplet, image) do
     droplet = hd(droplet droplet)
-    id = droplet.id
     image = if is_record(image, DigOc.Image), do: image.id, else: image
-    IO.puts "(rebuild) image is #{ inspect image }"
-    beginning_state = droplet.status
-    if beginning_state == "active" do
-      evt = droplets id, :power_off
-      event_progress evt
-    end
-    evt = droplets id, :rebuild, image
-    event_progress evt
-    if beginning_state == "active" do
-      evt = droplets id, :power_on
-      event_progress evt
-    end
-    droplet id
+    f = fn(id, image) -> droplets id, :rebuild, image end
+    power_off_action(droplet, f, [droplet.id, image])
+    droplet droplet.id
   end
-
 
 
   # -------------------------------------------------- /regions
