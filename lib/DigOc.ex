@@ -32,6 +32,11 @@ defmodule DigOc do
     Enum.map res["droplets"], fn(d) -> DigOc.Convert.to_droplet_record(d) end
   end
 
+  def droplets(id) do
+    res = DigOc.Raw.droplets id
+    DigOc.Convert.to_droplet_record(res["droplet"])
+  end
+
   def droplets(:new, params) do
     res = DigOc.Raw.droplets(:new, params)
     DigOc.Convert.to_droplet_record(res["droplet"])
@@ -343,6 +348,12 @@ defmodule DigOc do
   def domains(id, :edit_record, record_id, params) do
     res = DigOc.Raw.domains(id, :edit_record, record_id, params)
     DigOc.Convert.to_domainrecord_record(res["record"])
+  end
+
+  def domain(id) when is_integer(id), do: domains id
+
+  def domain(name) when is_binary(name) do
+    Enum.filter domains, fn(d) -> d.name == name end
   end
 
   # -------------------------------------------------- /events

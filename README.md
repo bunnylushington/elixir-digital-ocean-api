@@ -9,6 +9,9 @@ the behavior consistent with how it's described in the documentation
 but have provided a few potentially helpful convenience methods where
 appropriate.
 
+There are tests included; be warned that they create and destroy
+DigitalOcean resources!  Running them can incur charges or even
+destroy existing droplets so please, don't run them blindly.
 
 ## Documentation
 
@@ -31,6 +34,9 @@ and the like are possible.
 
         droplet_list = DigOc.droplets
 
+* Get a droplet by ID.
+
+        droplet = DigOc.droplets id
 
 * Create a new droplet.  Returns a record representing the newly
   created droplet (though most of the records will be nil until the
@@ -126,6 +132,10 @@ was running).
         droplet = DigOc.rebuild droplet, image
 
 
+* Get a droplet by ID or name.  (Convenience)
+
+        droplet = DigOc.droplet id_or_name
+
     
 ### Regions
 
@@ -206,7 +216,45 @@ in the size list until the cache is cleared.
 
 ### Domains
 
+* Get a list of all the domains.
 
+        domain_list = DigOc.domains
+
+* Get a domain by id.
+
+        domain_record = DigOc.domains id
+
+* Create a new domain.
+
+        domain_record = DigOc.domains :new, params
+
+* Destroy a domain.
+
+        :ok = DigOc.domains id, :destroy
+
+* Get a list of records for a domain.
+
+        records = DigOc.domains id, :records
+
+* Create a new record.
+
+        record = DigOc.domains id, :new_record, params
+
+* Get a specific record by id.
+
+        record = DigOc.domains id, :records, record_id
+
+* Destroy a record.
+
+        :ok = DigOc.domains id, :destroy_record, record_id
+
+* Edit a record.
+
+        record = DigOc.domains id, :edit_record, record_id, params
+
+* Get a record by name or id.  (Convenience)
+
+        record = DigOc.domain id_or_name
 
 
 ### Cache

@@ -6,6 +6,11 @@ defmodule DigOc.Raw do
     res
   end
 
+  def droplets(id) do
+    {:ok, res} = DigOc.Client.get("/droplets/#{ id }").body
+    res
+  end
+
   def droplets(:new, params) do
     url = "/droplets/new" <> qs(params)
     {:ok, res} = DigOc.Client.get(url).body
