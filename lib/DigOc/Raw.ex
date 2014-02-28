@@ -76,6 +76,50 @@ defmodule DigOc.Raw do
     {:ok, res} = DigOc.Client.get("/domains").body
     res
   end
+  
+  def domains(id) do
+    {:ok, res} = DigOc.Client.get("/domains/#{ id }").body
+    res
+  end
+
+  def domains(:new, params) do
+    {:ok, res} = DigOc.Client.get("/domains/new" <> qs(params)).body
+    res
+  end
+
+  def domains(id, :destroy) do
+    {:ok, res} = DigOc.Client.get("/domains/#{ id }/destroy").body
+    res
+  end
+
+  def domains(id, :records) do
+    {:ok, res} = DigOc.Client.get("/domains/#{ id }/records").body
+    res
+  end
+
+  def domains(id, :new_record, params) do
+    url = "/domains/#{ id }/records/new" <> qs(params)
+    {:ok, res} = DigOc.Client.get(url).body
+    res
+  end
+
+  def domains(id, :records, record_id) do
+    url = "/domains/#{ id }/records/#{ record_id }"
+    {:ok, res} = DigOc.Client.get(url).body
+    res
+  end
+
+  def domains(id, :destroy_record, record_id) do
+    url = "/domains/#{ id }/records/#{ record_id}/destroy"
+    {:ok, res} = DigOc.Client.get(url).body
+    res
+  end
+
+  def domains(id, :edit_record, record_id, params) do
+    url = "/domains/#{ id }/records/#{ record_id }/edit" <> qs(params)
+    {:ok, res} = DigOc.Client.get(url).body
+    res
+  end
 
   def events(id) do
     {:ok, res} = DigOc.Client.get("/events/#{ id }/").body

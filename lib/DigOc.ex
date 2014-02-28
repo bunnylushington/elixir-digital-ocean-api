@@ -288,10 +288,61 @@ defmodule DigOc do
     error: nil,
     zone_file_with_error: nil
 
+  defrecord DomainRecord,
+    id: nil,
+    domain_id: nil,
+    record_type: nil,
+    name: nil,
+    data: nil,
+    priority: nil,
+    port: nil,
+    weight: nil
+
   def domains do
     res = DigOc.Raw.domains
     Enum.map res["domains"],
          fn(d) -> DigOc.Convert.to_domain_record(d) end
+  end
+
+  def domains(id) do
+    res = DigOc.Raw.domains id
+    DigOc.Convert.to_domain_record(res["domain"])
+  end
+
+  def domains(:new, params) do
+    res = DigOc.Raw.domains(:new, params)
+    DigOc.Convert.to_domain_record(res["domain"])
+  end
+
+  def domains(id, :destroy) do
+    res = DigOc.Raw.domains(id, :destroy)
+    if res["status"] == "OK", do: :ok, else: :error
+  end
+
+  def domains(id, :records) do
+    res = DigOc.Raw.domains(id, :records)
+    Enum.map res["records"],
+         fn(d) -> DigOc.Convert.to_domainrecord_record(d) end
+  end
+
+  def domains(id, :new_record, params) do
+    res = DigOc.Raw.domains(id, :new_record, params)
+    DigOc.Convert.to_domainrecord_record(res["record"])
+  end
+
+  def domains(id, :records, record_id) do
+    res = DigOc.Raw.domains(id, :records, record_id)
+    DigOc.Convert.to_domainrecord_record(res["record"])
+  end
+  
+  def domains(id, :destroy_record, record_id) do
+    res = DigOc.Raw.domains(id, :destroy_record, record_id)
+    if res["status"] == "OK", do: :ok, else: :error
+  end
+
+  def domains(id, :edit_record, record_id, params) do
+    res = DigOc.Raw.domains(id, :edit_record, record_id, params)
+    DigOc.Convert.to_domainrecord_record(res["record"])
   end
 
   # -------------------------------------------------- /events

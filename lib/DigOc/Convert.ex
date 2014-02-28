@@ -65,6 +65,17 @@ defmodule DigOc.Convert do
                      zone_file_with_error: d["zone_file_with_error"])
   end
 
+  def to_domainrecord_record(d) do
+    DigOc.DomainRecord.new(id:          d["id"],
+                           domain_id:   d["domain_id"],
+                           record_type: d["record_type"],
+                           name:        d["name"],
+                           data:        d["data"],
+                           priority:    d["priority"],
+                           port:        d["port"],
+                           weight:      d["weight"])
+  end
+
 
   def to_event_record(d) do
     DigOc.Event.new(id:            d["id"],
