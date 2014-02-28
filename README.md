@@ -2,9 +2,12 @@
 
 ## Introduction
 
-A pretty straightforward implementation of the [DigitalOcean
-API](https://cloud.digitalocean.com/api_access) (login required) in
-[Elixir](http://elixir-lang.org).  
+A pretty straightforward implementation of the
+[DigitalOcean API](https://cloud.digitalocean.com/api_access) (login
+required) in [Elixir](http://elixir-lang.org).  We've tried to keep
+the behavior consistent with how it's described in the documentation
+but have provided a few potentially helpful convenience methods where
+appropriate.
 
 
 ## Documentation
@@ -13,7 +16,7 @@ To get started, be sure to set the environment variables
 `DIGITAL_OCEAN_CLIENT_ID` and `DIGITAL_OCEAN_API_KEY`.  
 
 This library closely follows the DigialOcean API document.  One
-convenience provided is the trnaslation of JSON return structures into
+convenience provided is the translation of JSON return structures into
 Elixir records.  So
 
     event_record = DigOc.event event_id
@@ -29,7 +32,10 @@ and the like are possible.
         droplet_list = DigOc.droplets
 
 
-* Create a new droplet.
+* Create a new droplet.  Returns a record representing the newly
+  created droplet (though most of the records will be nil until the
+  droplet creation event, specified by droplet.event_id, has
+  completed).
 
           region_id = 1             # nyc
           size_id = 66              # very small!
@@ -48,31 +54,31 @@ and the like are possible.
                           private_networking: private_networking,
                           ssh_key_ids: ssh_key_ids
 
-* Reboot a droplet.
+* Reboot a droplet.  Returns an event_id.
 
         DigOc.droplets droplet.id, :reboot
 
-* Power cycle a droplet.
+* Power cycle a droplet.  Returns an event_id.
 
         DigOc.droplets droplet.id, :powercycle
 
-* Shutdown a droplet.
+* Shutdown a droplet.  Returns an event_id.
 
         DigOc.droplets droplet.id, :shutdown
 
-* Power off a droplet.
+* Power off a droplet.  Returns an event_id.
 
         DigOc.droplets droplet.id, :power_off
 
-* Power on a droplet.
+* Power on a droplet.  Returns an event_id.
 
         DigOc.droplets droplet.id, :power_on
 
-* Reset a droplet password.
+* Reset a droplet password.  Returns an event_id.
 
         DigOc.droplets droplet.id, :password_reset
 
-* Destroy a droplet.
+* Destroy a droplet.  Returns an event_id.
 
         DigOc.droplets droplet.id, :destroy
 
