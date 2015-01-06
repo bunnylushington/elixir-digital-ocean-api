@@ -1,3 +1,8 @@
+# Deprecated!
+
+Hi -- There's a new Elixir library, digoc, available via hex or
+[on GitHub](https://github.com/kevinmontuori/digoc) that speaks D.O.'s API v2.  (Plus my Elixir programming got, I hope, better!)  Drop me a line if you have questions.
+
 # DigitalOcean API Client in Elixir
 
 ## Introduction
